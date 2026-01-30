@@ -1,177 +1,177 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数学A 小テスト：図形の性質</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
-        body { font-family: sans-serif; background: var(--bg); color: #1e293b; margin: 0; display: flex; justify-content: center; padding: 20px; }
-        #app { width: 100%; max-width: 600px; background: var(--card); padding: 24px; border-radius: 12px; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .hidden { display: none; }
-        h1 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
-        .btn { display: block; width: 100%; padding: 16px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 8px; background: white; font-size: 1rem; text-align: left; cursor: pointer; transition: 0.2s; }
-        .btn:hover { background: #eff6ff; border-color: var(--primary); }
-        .btn-primary { background: var(--primary); color: white; text-align: center; font-weight: bold; border: none; }
-        .info-box { background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; }
-        .q-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; line-height: 1.5; }
-        .status { font-size: 0.8rem; color: #64748b; margin-bottom: 8px; }
-        #result-area { text-align: center; }
-        .score { font-size: 3rem; font-weight: bold; color: var(--primary); }
-        textarea#copy-area { width: 1px; height: 1px; opacity: 0; position: absolute; }
-        .history-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-top: 20px; }
-        .history-table th, .history-table td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
+      :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
+      body { font-family: sans-serif; background: var(--bg); color: #1e293b; margin: 0; display: flex; justify-content: center; padding: 20px; }
+      #app { width: 100%; max-width: 600px; background: var(--card); padding: 24px; border-radius: 12px; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+      .hidden { display: none; }
+      h1 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+      .btn { display: block; width: 100%; padding: 16px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 8px; background: white; font-size: 1rem; text-align: left; cursor: pointer; transition: 0.2s; }
+      .btn:hover { background: #eff6ff; border-color: var(--primary); }
+      .btn-primary { background: var(--primary); color: white; text-align: center; font-weight: bold; border: none; }
+      .info-box { background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; }
+      .q-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; line-height: 1.5; }
+      .status { font-size: 0.8rem; color: #64748b; margin-bottom: 8px; }
+      #result-area { text-align: center; }
+      .score { font-size: 3rem; font-weight: bold; color: var(--primary); }
+      textarea#copy-area { width: 1px; height: 1px; opacity: 0; position: absolute; }
+      .history-table { width: 100%; font-size: 0.8rem; border-collapse: collapse; margin-top: 20px; }
+      .history-table th, .history-table td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
     </style>
-</head>
-<body>
-
-<div id="app">
-    <div id="screen-start">
+  </head>
+  <body>
+    
+    <div id="app">
+      <div id="screen-start">
         <h1>数学A：図形の性質 小テスト</h1>
         <div class="info-box">
-            ・全10問 (4択)<br>
-            ・名前の入力は不要です（出席番号のみ任意）<br>
-            ・最後に結果をコピーして提出してください
+          ・全10問 (4択)<br>
+          ・名前の入力は不要です（出席番号のみ任意）<br>
+          ・最後に結果をコピーして提出してください
         </div>
         <input type="text" id="student-id" placeholder="出席番号（例：01）" style="width:100%; padding:12px; margin-bottom:16px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box;">
         <button class="btn btn-primary" onclick="startQuiz()">テスト開始</button>
         <div id="history-section"></div>
-    </div>
-
-    <div id="screen-quiz" class="hidden">
+      </div>
+      
+      <div id="screen-quiz" class="hidden">
         <div class="status">第 <span id="q-num">1</span> 問 / 全10問</div>
         <div id="question" class="q-text"></div>
         <div id="options"></div>
-    </div>
-
-    <div id="screen-result" class="hidden">
+      </div>
+      
+      <div id="screen-result" class="hidden">
         <h1>テスト終了</h1>
         <div id="result-area">
-            <div class="score"><span id="final-score">0</span>点</div>
-            <p id="result-msg"></p>
-            <button class="btn btn-primary" onclick="copyResult()">結果をコピーして終了</button>
-            <p style="font-size:0.8rem; color:red;">※コピー後、スプレッドシートに貼り付けて提出してください</p>
-            <button class="btn" onclick="location.reload()">もう一度受ける</button>
-            <button class="btn" style="color:red; border-color:#fecaca;" onclick="resetData()">履歴を全削除</button>
+          <div class="score"><span id="final-score">0</span>点</div>
+          <p id="result-msg"></p>
+          <button class="btn btn-primary" onclick="copyResult()">結果をコピーして終了</button>
+          <p style="font-size:0.8rem; color:red;">※コピー後、スプレッドシートに貼り付けて提出してください</p>
+          <button class="btn" onclick="location.reload()">もう一度受ける</button>
+          <button class="btn" style="color:red; border-color:#fecaca;" onclick="resetData()">履歴を全削除</button>
         </div>
+      </div>
     </div>
-</div>
-
-<textarea id="copy-area" readonly></textarea>
-
-<script>
-// --- 問題データ ---
-const questions = [
-    {q: "△ABCの重心をG、中線をADとする時、AG:GDの比は？", o: ["1:1", "2:1", "3:1", "1:2"], a: 1, h: "重心は中線を2:1に内分します。"},
-    {q: "△ABCの角B, 角Cの二等分線の交点はどれ？", o: ["重心", "外心", "内心", "垂心"], a: 2, h: "角の二等分線の交点は内心です。"},
-    {q: "△ABCの3辺の垂直二等分線の交点はどれ？", o: ["重心", "外心", "内心", "垂心"], a: 1, h: "垂直二等分線の交点は外心です。"},
-    {q: "円に内接する四角形ABCDで、∠A=110°のとき∠Cは？", o: ["70°", "110°", "180°", "90°"], a: 0, h: "対角の和は180°です。"},
-    {q: "接弦定理より、接線と弦の作る角は、その内部にある弧に対する何に等しい？", o: ["中心角", "対頂角", "円周角", "錯角"], a: 2, h: "接弦定理の基本性質です。"},
-    {q: "方べきの定理において、円の外部の点Pから引いた2本の割線が円と交わる点をA,BおよびC,Dとする時、成り立つ式は？", o: ["PA+PB=PC+PD", "PA・AB=PC・CD", "PA・PB=PC・PD", "PA:PB=PC:PD"], a: 2, h: "PA・PB = PC・PD が成立します。"},
-    {q: "チェバの定理が利用される図形の要素は？", o: ["円の接線", "三角形の頂点と対辺上の点", "平行四辺形の対角線", "直角三角形の斜辺"], a: 1, h: "3本の中線や線分が1点で交わる時に使います。"},
-    {q: "メネラウスの定理において、三角形と1本の直線が交わる時、比の積の値はいくらになる？", o: ["0", "1", "2", "-1"], a: 1, h: "公式の右辺は1になります。"},
-    {q: "三角形の外心について、外心から各頂点までの距離はどうなっている？", o: ["すべて等しい", "それぞれ異なる", "2:1になっている", "辺の長さに比例する"], a: 0, h: "外接円の半径になるためすべて等しいです。"},
-    {q: "三角形の3本の高さ（頂点から対辺への垂線）が交わる点は？", o: ["重心", "外心", "内心", "垂心"], a: 3, h: "垂線の交点は垂心です。"}
-];
-
-let currentIdx = 0;
-let score = 0;
-let startTime;
-const userAnswers = [];
-
-function startQuiz() {
-    document.getElementById('screen-start').classList.add('hidden');
-    document.getElementById('screen-quiz').classList.remove('hidden');
-    startTime = Date.now();
-    showQuestion();
-}
-
-function showQuestion() {
-    const q = questions[currentIdx];
-    document.getElementById('q-num').innerText = currentIdx + 1;
-    document.getElementById('question').innerText = q.q;
-    const optDiv = document.getElementById('options');
-    optDiv.innerHTML = '';
-    q.o.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'btn';
-        btn.innerText = `${i + 1}. ${opt}`;
-        btn.onclick = () => next(i);
-        optDiv.appendChild(btn);
-    });
-}
-
-function next(choice) {
-    const isCorrect = choice === questions[currentIdx].a;
-    if (isCorrect) score += 10;
-    userAnswers.push(isCorrect ? "○" : "×");
     
-    currentIdx++;
-    if (currentIdx < questions.length) {
+    <textarea id="copy-area" readonly></textarea>
+    
+    <script>
+      // --- 問題データ ---
+      const questions = [
+      {q: "△ABCの重心をG、中線をADとする時、AG:GDの比は？", o: ["1:1", "2:1", "3:1", "1:2"], a: 1, h: "重心は中線を2:1に内分します。"},
+      {q: "△ABCの角B, 角Cの二等分線の交点はどれ？", o: ["重心", "外心", "内心", "垂心"], a: 2, h: "角の二等分線の交点は内心です。"},
+      {q: "△ABCの3辺の垂直二等分線の交点はどれ？", o: ["重心", "外心", "内心", "垂心"], a: 1, h: "垂直二等分線の交点は外心です。"},
+      {q: "円に内接する四角形ABCDで、∠A=110°のとき∠Cは？", o: ["70°", "110°", "180°", "90°"], a: 0, h: "対角の和は180°です。"},
+      {q: "接弦定理より、接線と弦の作る角は、その内部にある弧に対する何に等しい？", o: ["中心角", "対頂角", "円周角", "錯角"], a: 2, h: "接弦定理の基本性質です。"},
+      {q: "方べきの定理において、円の外部の点Pから引いた2本の割線が円と交わる点をA,BおよびC,Dとする時、成り立つ式は？", o: ["PA+PB=PC+PD", "PA・AB=PC・CD", "PA・PB=PC・PD", "PA:PB=PC:PD"], a: 2, h: "PA・PB = PC・PD が成立します。"},
+      {q: "チェバの定理が利用される図形の要素は？", o: ["円の接線", "三角形の頂点と対辺上の点", "平行四辺形の対角線", "直角三角形の斜辺"], a: 1, h: "3本の中線や線分が1点で交わる時に使います。"},
+      {q: "メネラウスの定理において、三角形と1本の直線が交わる時、比の積の値はいくらになる？", o: ["0", "1", "2", "-1"], a: 1, h: "公式の右辺は1になります。"},
+      {q: "三角形の外心について、外心から各頂点までの距離はどうなっている？", o: ["すべて等しい", "それぞれ異なる", "2:1になっている", "辺の長さに比例する"], a: 0, h: "外接円の半径になるためすべて等しいです。"},
+      {q: "三角形の3本の高さ（頂点から対辺への垂線）が交わる点は？", o: ["重心", "外心", "内心", "垂心"], a: 3, h: "垂線の交点は垂心です。"}
+      ];
+      
+      let currentIdx = 0;
+      let score = 0;
+      let startTime;
+      const userAnswers = [];
+      
+      function startQuiz() {
+        document.getElementById('screen-start').classList.add('hidden');
+        document.getElementById('screen-quiz').classList.remove('hidden');
+        startTime = Date.now();
         showQuestion();
-    } else {
-        finish();
-    }
-}
-
-function finish() {
-    document.getElementById('screen-quiz').classList.add('hidden');
-    document.getElementById('screen-result').classList.remove('hidden');
-    const time = Math.floor((Date.now() - startTime) / 1000);
-    document.getElementById('final-score').innerText = score;
-    
-    // 履歴保存
-    const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
-    const resultData = {
-        date: new Date().toLocaleString('ja-JP'),
-        id: document.getElementById('student-id').value || '未入力',
-        score: score,
-        time: time + "秒",
-        details: userAnswers.join(',')
-    };
-    history.unshift(resultData);
-    localStorage.setItem('math_a_quiz', JSON.stringify(history.slice(0, 5))); // 直近5回
-}
-
-function copyResult() {
-    const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
-    const r = history[0];
-    // スプレッドシート貼付用 TSV形式 (日付, ID, 点数, 時間, 正誤詳細)
-    const tsv = `${r.date}\t${r.id}\t${r.score}\t${r.time}\t${r.details}`;
-    const area = document.getElementById('copy-area');
-    area.value = tsv;
-    area.select();
-    document.execCommand('copy');
-    alert('結果をクリップボードにコピーしました！スプレッドシートに貼り付けてください。');
-}
-
-function loadHistory() {
-    const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
-    if (history.length === 0) return;
-    let html = '<h3>直近の履歴</h3><table class="history-table"><tr><th>日時</th><th>点数</th><th>結果</th></tr>';
-    history.forEach(h => {
-        html += `<tr><td>${h.date}</td><td>${h.score}</td><td>${h.details}</td></tr>`;
-    });
-    html += '</table>';
-    document.getElementById('history-section').innerHTML = html;
-}
-
-function resetData() {
-    if(confirm('全ての学習履歴を削除しますか？')) {
-        localStorage.removeItem('math_a_quiz');
-        location.reload();
-    }
-}
-
-// キーボード操作 (1-4キーで回答)
-window.addEventListener('keydown', e => {
-    if (document.getElementById('screen-quiz').classList.contains('hidden')) return;
-    if (e.key >= '1' && e.key <= '4') {
-        next(parseInt(e.key) - 1);
-    }
-});
-
-loadHistory();
-</script>
-</body>
+      }
+      
+      function showQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('q-num').innerText = currentIdx + 1;
+        document.getElementById('question').innerText = q.q;
+        const optDiv = document.getElementById('options');
+        optDiv.innerHTML = '';
+        q.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.innerText = `${i + 1}. ${opt}`;
+            btn.onclick = () => next(i);
+            optDiv.appendChild(btn);
+        });
+      }
+      
+      function next(choice) {
+        const isCorrect = choice === questions[currentIdx].a;
+        if (isCorrect) score += 10;
+        userAnswers.push(isCorrect ? "○" : "×");
+        
+        currentIdx++;
+        if (currentIdx < questions.length) {
+          showQuestion();
+        } else {
+          finish();
+        }
+      }
+      
+      function finish() {
+        document.getElementById('screen-quiz').classList.add('hidden');
+        document.getElementById('screen-result').classList.remove('hidden');
+        const time = Math.floor((Date.now() - startTime) / 1000);
+        document.getElementById('final-score').innerText = score;
+        
+        // 履歴保存
+        const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
+        const resultData = {
+          date: new Date().toLocaleString('ja-JP'),
+          id: document.getElementById('student-id').value || '未入力',
+          score: score,
+          time: time + "秒",
+          details: userAnswers.join(',')
+        };
+        history.unshift(resultData);
+        localStorage.setItem('math_a_quiz', JSON.stringify(history.slice(0, 5))); // 直近5回
+      }
+      
+      function copyResult() {
+        const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
+        const r = history[0];
+        // スプレッドシート貼付用 TSV形式 (日付, ID, 点数, 時間, 正誤詳細)
+        const tsv = `${r.date}\t${r.id}\t${r.score}\t${r.time}\t${r.details}`;
+        const area = document.getElementById('copy-area');
+        area.value = tsv;
+        area.select();
+        document.execCommand('copy');
+        alert('結果をクリップボードにコピーしました！スプレッドシートに貼り付けてください。');
+      }
+      
+      function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('math_a_quiz') || '[]');
+        if (history.length === 0) return;
+        let html = '<h3>直近の履歴</h3><table class="history-table"><tr><th>日時</th><th>点数</th><th>結果</th></tr>';
+        history.forEach(h => {
+            html += `<tr><td>${h.date}</td><td>${h.score}</td><td>${h.details}</td></tr>`;
+        });
+        html += '</table>';
+        document.getElementById('history-section').innerHTML = html;
+      }
+      
+      function resetData() {
+        if(confirm('全ての学習履歴を削除しますか？')) {
+          localStorage.removeItem('math_a_quiz');
+          location.reload();
+        }
+      }
+      
+      // キーボード操作 (1-4キーで回答)
+      window.addEventListener('keydown', e => {
+          if (document.getElementById('screen-quiz').classList.contains('hidden')) return;
+          if (e.key >= '1' && e.key <= '4') {
+            next(parseInt(e.key) - 1);
+          }
+      });
+      
+      loadHistory();
+    </script>
+  </body>
 </html>
